@@ -7,8 +7,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import f_classif, mutual_info_classif
 from sklearn.decomposition import PCA
 
-RANDOM_STATE = 42
-
 def correlation_graphic(ax, x):
     sns.heatmap(x.corr(), cmap="coolwarm", center=0.0,
                 annot=True, fmt=".2f", annot_kws={"size": 7},
@@ -16,13 +14,13 @@ def correlation_graphic(ax, x):
     ax.set_title("Корреляция между признаками")
 
 
-def pca_graphic(ax, x, y, class_names, first = 0, second = 1):
+def pca_graphic(ax, x, y, class_names, first = 0, second = 1, random_state = None):
     if first < 0 or second < 0:
         return
     if first > second:
         first, second = second, first
     x_scaled = StandardScaler().fit_transform(x)
-    pca = PCA(n_components=second + 1, random_state=RANDOM_STATE)
+    pca = PCA(n_components=second + 1, random_state=random_state)
     x_pca = pca.fit_transform(x_scaled)
 
     scatter = ax.scatter(x_pca[:, first], x_pca[:, second], c=y, cmap="tab10", s=12, alpha=0.6)
@@ -52,14 +50,14 @@ def class_balance_graphic(ax, df, target="Class"):
     ax.set_xlabel("Класс")
     ax.set_ylabel("Объектов")
 
-def mi_graphic(ax, x, y):
-    mi = pd.Series(mutual_info_classif(x, y, random_state=RANDOM_STATE),
+def mi_graphic(ax, x, y, random_state = None):
+    mi = pd.Series(mutual_info_classif(x, y, random_state=random_state),
                    index=x.columns).sort_values(ascending=True)
     mi.plot.barh(ax=ax, color="darkorange")
     ax.set_title("Mutual Information по признакам")
     ax.set_xlabel("MI (bits)")
 
-def boxplot_single(ax, df, feature, target="Class"):
+def boxplot_single(ax, df, feature, target = "Class"):
     sns.boxplot(data=df, x=target, y=feature, hue=target,
                 palette="Set2", legend=False, ax=ax)
     ax.set_title(f"Распределение '{feature}' по классам")
