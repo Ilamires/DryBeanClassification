@@ -41,7 +41,7 @@ def anova_graphic(ax, x, y):
     ax.set_title("ANOVA F-statistic по признакам")
     ax.set_xlabel("F-statistic")
 
-def class_balance_graphic(ax, df, target="Class"):
+def class_balance_graphic(ax, df, target):
     order = df[target].value_counts().index
     sns.countplot(data=df, x=target, hue=target,
                   order=order, palette="viridis",
@@ -57,7 +57,7 @@ def mi_graphic(ax, x, y, random_state = None):
     ax.set_title("Mutual Information по признакам")
     ax.set_xlabel("MI (bits)")
 
-def boxplot_single(ax, df, feature, target = "Class"):
+def boxplot_single(ax, df, feature, target):
     sns.boxplot(data=df, x=target, y=feature, hue=target,
                 palette="Set2", legend=False, ax=ax)
     ax.set_title(f"Распределение '{feature}' по классам")
